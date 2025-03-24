@@ -137,6 +137,15 @@ public class VendingMachineController {
 
         VendingMachine vendingMachine = vendingMachineOpt.get();
 
+        // **Check if the product is already in the vending machine**
+        boolean productExists = vendingMachine.getAllProducts().stream()
+                .anyMatch(p -> p.getId() == productId);
+
+        if (productExists) {
+            System.out.println("This product is already in the vending machine.");
+            return;
+        }
+
         // Add the selected product to the vending machine
         if (vendingMachine.addProduct(product)) {
             System.out.println("Product added successfully: " + product);
@@ -144,6 +153,7 @@ public class VendingMachineController {
             System.out.println("Failed to add product. Compartment may be full or incorrect.");
         }
     }
+
 
     public void moveProduct(Scanner scanner) {
         if (vendingMachines.isEmpty()) {

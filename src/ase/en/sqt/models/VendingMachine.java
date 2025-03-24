@@ -28,6 +28,10 @@ public class VendingMachine {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public boolean addProduct(Product product) {
         return switch (product.getType()) {
             case HOT -> addToList(hotStuffList, product);
@@ -78,6 +82,13 @@ public class VendingMachine {
                 .filter(p -> p.getId() == id)
                 .findFirst()
                 .or(() -> coldStuffList.stream().filter(p -> p.getId() == id).findFirst());
+    }
+
+    public List<Product> getAllProducts() {
+        List<Product> allProducts = new ArrayList<>();
+        allProducts.addAll(hotStuffList);
+        allProducts.addAll(coldStuffList);
+        return allProducts;
     }
 
     @Override
