@@ -41,14 +41,7 @@ public class ProductController {
         }
 
         System.out.print("Enter product cost: ");
-        if (!scanner.hasNextDouble()) {  // Check if input is a valid number
-            System.out.println("Invalid cost. Please enter a valid number.");
-            scanner.nextLine();
-            return;
-        }
-
-        double cost = scanner.nextDouble();
-        scanner.nextLine();
+        double cost = getValidDoubleInput(scanner);
 
         if (cost <= 0) {
             System.out.println("Cost must be greater than 0.");
@@ -56,13 +49,29 @@ public class ProductController {
         }
 
         System.out.print("Enter product type (HOT, COLD, IDK): ");
-        try {
-            ProductType type = ProductType.valueOf(scanner.next().toUpperCase());
-            Product product = new Product(productIdCounter++, name, cost, type);
-            products.add(product);
-            System.out.println("Product added: " + product);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid product type. Please enter HOT, COLD, or IDK.");
+        ProductType type = getValidProductType(scanner);
+
+        if (type != null) {
+            products.add(new Product(productIdCounter++, name, cost, type));
+            System.out.println("Product added successfully.");
+        }
+    }
+
+    private double getValidDoubleInput(Scanner scanner) {
+        while (!scanner.hasNextDouble()) {
+            System.out.print("Invalid input. Please enter a valid number: ");
+            scanner.next();
+        }
+        return scanner.nextDouble();
+    }
+
+    private ProductType getValidProductType(Scanner scanner) {
+        while (true) {
+            try {
+                return ProductType.valueOf(scanner.next().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.print("Invalid product type. Please enter HOT, COLD, or IDK: ");
+            }
         }
     }
 
@@ -94,18 +103,16 @@ public class ProductController {
         System.out.print("Enter product type to filter (HOT, COLD, IDK, or ALL for all products): ");
         String typeInput = scanner.next().toUpperCase();
 
+        if (typeInput.equals("ALL")) {
+            listProducts();
+            return;
+        }
+
         try {
-            if (typeInput.equals("ALL")) {
-                listProducts(); // Show all products
-                return;
-            }
-
             ProductType filterType = ProductType.valueOf(typeInput);
-
             products.stream()
                     .filter(product -> product.getType() == filterType)
                     .forEach(System.out::println);
-
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid product type. Please enter HOT, COLD, IDK, or ALL.");
         }

@@ -9,6 +9,10 @@ public class Product {
     private ProductType type;
 
     public Product(int id, String name, double cost, ProductType type) {
+        if (cost <= 0) {
+            throw new IllegalArgumentException("Cost must be greater than zero.");
+        }
+
         this.id = id;
         this.name = name;
         this.cost = cost;

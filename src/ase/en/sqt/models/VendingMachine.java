@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class VendingMachine {
-    private int id;
+    private final int id;
     private String name;
     private String location;
     private int capacity;
