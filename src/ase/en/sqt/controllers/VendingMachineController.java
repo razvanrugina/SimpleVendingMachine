@@ -25,8 +25,10 @@ public class VendingMachineController {
             System.out.println("2. List Vending Machines");
             System.out.println("3. Add Product to Vending Machine");
             System.out.println("4. Move Product");
-            System.out.println("5. Exit");
+            System.out.println("5. Delete Vending Machine");
+            System.out.println("6. Exit");
             System.out.print("Enter choice: ");
+
             int choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -35,7 +37,8 @@ public class VendingMachineController {
                 case 2 -> listVendingMachines();
                 case 3 -> addProduct(scanner);
                 case 4 -> moveProduct(scanner);
-                case 5 -> {
+                case 5 -> deleteVendingMachine(scanner);
+                case 6 -> {
                     System.out.println("Exiting Vending Machine Management.");
                     return;
                 }
@@ -64,6 +67,39 @@ public class VendingMachineController {
         }
         vendingMachines.forEach(System.out::println);
     }
+
+    public void deleteVendingMachine(Scanner scanner) {
+        if (vendingMachines.isEmpty()) {
+            System.out.println("No vending machines available to delete.");
+            return;
+        }
+
+        listVendingMachines();
+
+        System.out.print("Enter vending machine ID to delete: ");
+        int machineId = scanner.nextInt();
+        scanner.nextLine();
+
+        Optional<VendingMachine> machineToRemove = vendingMachines.stream()
+                .filter(vm -> vm.getId() == machineId)
+                .findFirst();
+
+        if (machineToRemove.isPresent()) {
+            System.out.print("Are you sure you want to delete vending machine "
+                    + machineToRemove.get().getName() + "? (yes/no): ");
+            String confirmation = scanner.nextLine().trim().toLowerCase();
+
+            if (confirmation.equals("yes")) {
+                vendingMachines.remove(machineToRemove.get());
+                System.out.println("Vending machine deleted successfully.");
+            } else {
+                System.out.println("Deletion canceled.");
+            }
+        } else {
+            System.out.println("Vending machine ID not found.");
+        }
+    }
+
 
     public void addProduct(Scanner scanner) {
         if (vendingMachines.isEmpty()) {
